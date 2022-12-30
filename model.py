@@ -7,3 +7,7 @@ from keras.preprocessing import image
 from keras.applications.vgg16 import VGG16
 
 model = VGG16()
+
+from keras.utils.vis_utils import plot_model
+print(model.summary())
+plot_model(model, to_file='vgg.png')
