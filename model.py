@@ -1,4 +1,3 @@
-import keras
 from keras.models import Model
 from keras.layers import Dense
 from keras import optimizers
@@ -11,3 +10,5 @@ model = VGG16()
 from keras.utils.vis_utils import plot_model
 print(model.summary())
 plot_model(model, to_file='vgg.png')
+
+from tensorflow import keras
