@@ -1,0 +1,61 @@
+[33mcommit 3ade9c9322321f061971bf7f187236e50151cbfd[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author: John Lawrence Abarquez <lawrence.abarquez@gmail.com>
+Date:   Wed Feb 15 12:35:33 2023 +0800
+
+    Revert "Imported numpy package"
+    
+    This reverts commit 3f5c269983e8195f2d1f8774fddaab0220dd26fa.
+
+[33mcommit 461c8ed1a36e54434146eb81538a3e40ca7c2ac7[m
+Author: John Lawrence Abarquez <lawrence.abarquez@gmail.com>
+Date:   Tue Feb 14 23:34:36 2023 +0800
+
+    Removed all test and training data
+
+[33mcommit 30a832fe05e1217b54d0a736e9377884fa668941[m
+Author: John Lawrence Abarquez <lawrence.abarquez@gmail.com>
+Date:   Tue Feb 14 22:01:00 2023 +0800
+
+    Added Test and Training Data/Labels
+
+[33mcommit 3f5c269983e8195f2d1f8774fddaab0220dd26fa[m
+Author: John Lawrence Abarquez <lawrence.abarquez@gmail.com>
+Date:   Tue Feb 14 21:36:40 2023 +0800
+
+    Imported numpy package
+
+[33mcommit 44ac95917ca0c80cb994660836eda1d6511dbb99[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: Lawrence <lawrence.abarquez@gmail.com>
+Date:   Tue Jan 3 23:31:40 2023 +0800
+
+    Fixed Conda environment and plotted VGG Model
+
+[33mcommit d6e82538a8442a5e8d246375e2889c9b806d5f84[m
+Author: John Lawrence Abarquez <lawrence.abarquez@gmail.com>
+Date:   Sat Dec 31 05:48:16 2022 +0800
+
+    Added Venv for WSL Use development
+
+[33mcommit e340bc30c1929c0eeaa0a9b2382c0aea8207ea50[m
+Author: John Lawrence Abarquez <lawrence.abarquez@gmail.com>
+Date:   Sat Dec 31 05:46:46 2022 +0800
+
+    Added Venv for WSL Use development
+
+[33mcommit 337232d93ed37e835fc57e07a4702f03e40c29f0[m
+Author: Lawrence <lawrence.abarquez@gmail.com>
+Date:   Thu Dec 29 21:18:38 2022 +0800
+
+    Imported keras
+
+[33mcommit 1d7cee1fce54c2fedf28e62e1bbba5315f1072ca[m
+Author: John Lawrence Abarquez <lawrence.abarquez@gmail.com>
+Date:   Thu Dec 29 20:55:10 2022 +0800
+
+    Added main model file
+
+[33mcommit 4c871085d899b608a4c0b0c60b6fbde3376832ab[m
+Author: jnlawrence <lawrence.abarquez@gmail.com>
+Date:   Thu Dec 29 20:47:03 2022 +0800
+
+    Initial commit
