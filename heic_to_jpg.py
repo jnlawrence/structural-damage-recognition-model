@@ -14,8 +14,7 @@ for file in os.listdir(SourceFolder):
     img.save(filename=TargetFile)
     img.close()
 
-
 # # Remove all HEIC files
-# for file in os.listdir(SourceFolder):
-#     if file.endswith(".HEIC"):
-#         os.remove(SourceFolder + "/" + file)
+for file in os.listdir(SourceFolder):
+    if file.endswith(".HEIC"):
+        os.remove(SourceFolder + "/" + file)

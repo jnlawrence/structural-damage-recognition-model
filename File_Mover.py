@@ -1,4 +1,6 @@
 from glob import glob
+import os
+import shutil
 
 # Path setup.
 path = r"C:\Users\John\Documents\Datasets\Consolidated_Photo_Database"
