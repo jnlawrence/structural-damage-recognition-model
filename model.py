@@ -28,8 +28,8 @@ vgg16_model = VGG16(include_top = False,
             classes = 1000,
             classifier_activation="softmax") 
 num_classes = 3
-batch_size = 32
-num_epochs = 10
+batch_size = 16
+num_epochs = 2
 
 # Do not retrain convolutional layers
 for layer in vgg16_model.layers:
@@ -39,8 +39,8 @@ input_shape = keras.Input(shape=(224, 224, 3))
 
 # Add new fully connected layers
 x = Flatten()(vgg16_model.output)
-x = Dense(4096, activation='relu')(x)
-x = Dense(4096, activation='relu')(x)
+x = Dense(2048, activation='relu')(x)
+x = Dense(1024, activation='relu')(x)
 output = Dense(num_classes, activation='softmax')(x)  # num_classes is the number of classes in your dataset
 
 # Create a new model with the fully connected layers added
@@ -50,12 +50,14 @@ model = Model(inputs=vgg16_model.input, outputs=output)
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
 # Create an instance of ImageDataGenerator for data augmentation
-datagen = ImageDataGenerator(rotation_range=20,
-                             width_shift_range=0.1,
-                             height_shift_range=0.1,
-                             shear_range=0.2,
-                             zoom_range=0.2,
-                             horizontal_flip=True)
+datagen = ImageDataGenerator(
+                            #  rotation_range=20,
+                            #  width_shift_range=0.1,
+                            #  height_shift_range=0.1,
+                            #  shear_range=0.2,
+                            #  zoom_range=0.2,
+                            #  horizontal_flip=True
+                             )
 
 # Fit the ImageDataGenerator on the training data
 datagen.fit(x_train)
@@ -74,39 +76,9 @@ test_generator = datagen.flow(x_test,
 
 # Use the generators to train the model
 history = model.fit(train_generator,
-          epochs=10,
-          steps_per_epoch=len(train_generator) // batch_size,
+          epochs=num_epochs,
+          steps_per_epoch= len(train_generator) // batch_size,
           validation_data=test_generator)
-
-# # Define data generators for training and validation
-# train_datagen = ImageDataGenerator(
-#     rescale=1./255,
-#     shear_range=0.2,
-#     zoom_range=0.2,
-#     horizontal_flip=True)
-
-# test_datagen = ImageDataGenerator(rescale=1./255)
-# #fully connected layer that will iterate over dataset
-
-# train_generator = train_datagen.flow(
-#     data, #training data directory
-#     # target_size=input_shape[:2],
-#     batch_size=batch_size,
-#     class_mode='categorical')
-
-# validation_generator = test_datagen.flow(
-#     y, #validation data directory
-#     target_size=input_shape[:2],
-#     batch_size=batch_size,
-#     class_mode='categorical')
-
-# # Train the model
-# history = model.fit_generator(
-#     train_generator,
-#     steps_per_epoch=train_generator.samples // batch_size,
-#     epochs=num_epochs,
-#     validation_data=validation_generator,
-#     validation_steps=validation_generator.samples // batch_size)
 
 # Save the trained model
 model.save('vgg16_trained.h5')
@@ -118,29 +90,80 @@ plt.title('Model Accuracy')
 plt.xlabel('Epoch')
 plt.ylabel('Accuracy')
 plt.legend(['Train', 'Validation'], loc='upper left')
+
+print(history.history['val_accuracy'])
+#Find the x and y position of the highest test accuracy
+#list all val_accuracy values
+list = history.history['val_accuracy']
+
+#find highest val_accuracy
+ymax =  max(history.history['val_accuracy'])
+
+#find index of highest val_accuracy
+xpos = list.index(max(history.history['val_accuracy']))
+
+# Annotation for max accuracy
+plt.annotate('Max Accuracy @ {}%'.format(round(ymax*100,2)), xy=(xpos, ymax), xytext=(xpos, ymax+.05), ha = 'center', 
+             arrowprops=dict(arrowstyle="->", facecolor='black'))
+#Show plot             
 plt.show()
+# # Plot the training and validation loss
+# plt.plot(history.history['loss'])
+# plt.plot(history.history['val_loss'])
+# plt.title('Model Loss')
+# plt.xlabel('Epoch')
+# plt.ylabel('Loss')
+# plt.legend(['Train', 'Validation'], loc='upper left')
+# plt.show()
 
-# Plot the training and validation loss
-plt.plot(history.history['loss'])
-plt.plot(history.history['val_loss'])
-plt.title('Model Loss')
-plt.xlabel('Epoch')
-plt.ylabel('Loss')
-plt.legend(['Train', 'Validation'], loc='upper left')
-plt.show()
+# import ray
+# from ray import air, tune
+# from ray.tune.schedulers import AsyncHyperBandScheduler
+# from ray.tune.integration.keras import TuneReportCallback
 
+# def tune_mnist(num_training_iterations):
+#     sched = AsyncHyperBandScheduler(
+#         time_attr="training_iteration", max_t=400, grace_period=20
+#     )
 
-# To show all the data in npy file as images [FOR DEMO PURPOSES ONLY]
-# img_array=np.load(r'/mnt/c/Users/John/Documents/Datasets/task7/task7_X_test.npy')
-# i = 0
-# while i < len(img_array):
-#    plt.imshow(img_array[i])
-#    plt.show()
-#    i += 1
-#    img = Image.fromarray(img_array[i], 'RGB')
-#    img.show()
-#    img.save('sample.png')
-#    i += 1
+#     tuner = tune.Tuner(
+#         tune.with_resources(train_generator, resources={"cpu": 2, "gpu": 0}),
+#         tune_config=tune.TuneConfig(
+#             metric="mean_accuracy",
+#             mode="max",
+#             scheduler=sched,
+#             num_samples=len(train_generator),
+#         ),
+#         run_config=air.RunConfig(
+#             name="exp",
+#             stop={"mean_accuracy": 0.99, "training_iteration": num_training_iterations},
+#         ),
+#         param_space={
+#             "threads": 2,
+#             "lr": tune.uniform(0.001, 0.1),
+#             "momentum": tune.uniform(0.1, 0.9),
+#             "hidden": tune.randint(32, 512),
+#         },
+#     )
+#     results = tuner.fit()
+
+#     print("Best hyperparameters found were: ", results.get_best_result().config)
+
+# import argparse
+
+# if __name__ == "__main__":
+#     parser = argparse.ArgumentParser()
+#     parser.add_argument(
+#         "--smoke-test", action="store_true", help="Finish quickly for testing"
+#     )
+#     args, _ = parser.parse_known_args()
+
+#     if args.smoke_test:
+#         ray.init(num_cpus=4)
+
+#     tune_mnist(num_training_iterations=5 if args.smoke_test else 300)
+
+# x
 
 """ 
 load the VGG16 model without the fully connected layers using the 
