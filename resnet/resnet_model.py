@@ -30,7 +30,17 @@ batch_size = 1
 num_epochs = 10
 
 # Load the ResNet50 model without the fully connected layer
-base_model = ResNet50(weights='imagenet', include_top=False)
+base_model = ResNet50(include_top = False,
+            weights = 'imagenet', 
+            input_tensor = None, 
+            input_shape = (224,224,3), #shape of npy file data
+            pooling = None,
+            classes = 1000,
+            classifier_activation="softmax")
+
+# Freeze the ResNet50 layers so that they are not updated during training
+for layer in base_model.layers:
+    layer.trainable = False
 
 # Add custom layers
 x = base_model.output
@@ -45,7 +55,6 @@ model = Model(inputs=base_model.input, outputs=predictions)
 for layer in base_model.layers:
     layer.trainable = False
 
-
 # Compile the model
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
@@ -58,7 +67,8 @@ datagen = ImageDataGenerator(rescale=1./255,
                                    shear_range=45.0, 
                                    zoom_range=60.0,
                                    horizontal_flip=True, 
-                                   vertical_flip=True)
+                                   vertical_flip=True
+                                   )
 
 # Fit the ImageDataGenerator on the training data
 datagen.fit(x_train)
@@ -73,10 +83,6 @@ test_generator = datagen.flow(x_test,
                               y_test, 
                               batch_size=batch_size,
                               shuffle=False)
-# Make generator to train ResNet50
-# train_generator = datagen.flow(x_train, y_train, batch_size=32)
-# test_generator = datagen.flow(x_test, y_test, batch_size=32)
-
 
 # Use the generators to train the model
 history = model.fit(train_generator,
@@ -86,11 +92,11 @@ history = model.fit(train_generator,
           validation_steps=1)
 
 # Save the trained model
-# model.save('vgg16_trained.h5')
+# model.save('resnet_trained.h5')
 
 # Plot the training and Testing accuracy
 plt.plot(history.history['accuracy'])
-plt.plot(history.history['test_accuracy'])
+plt.plot(history.history['val_accuracy'])
 plt.title('Model Accuracy')
 plt.xlabel('Epoch')
 plt.ylabel('Accuracy')
@@ -105,13 +111,3 @@ plt.xlabel('Epoch')
 plt.ylabel('Loss')
 plt.legend(['Train', 'Testing'], loc='upper left')
 plt.show()
-
-
-""" 
-load the VGG16 model without the fully connected layers using the 
-'VGG16 function from Keras, and freeze all the layers in the pre-trained model.
-hen, we add new fully connected layers to the model, compile it with the adam optimizer and
-'categorical_crossentropy loss function, and define data generators for training and Testing 
-using the ImageDataGenerator function from Keras. 
-Finally, we train the model using the fit_generator function from Keras 
-and save the trained model using the save function."""
