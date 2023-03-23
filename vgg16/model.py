@@ -107,14 +107,14 @@ plt.annotate('Max Accuracy @ {}%'.format(round(ymax*100,2)), xy=(xpos, ymax), xy
              arrowprops=dict(arrowstyle="->", facecolor='black'))
 #Show plot             
 plt.show()
-# # Plot the training and validation loss
-# plt.plot(history.history['loss'])
-# plt.plot(history.history['val_loss'])
-# plt.title('Model Loss')
-# plt.xlabel('Epoch')
-# plt.ylabel('Loss')
-# plt.legend(['Train', 'Validation'], loc='upper left')
-# plt.show()
+# Plot the training and validation loss
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('Model Loss')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.legend(['Train', 'Validation'], loc='upper left')
+plt.show()
 
 # import ray
 # from ray import air, tune
