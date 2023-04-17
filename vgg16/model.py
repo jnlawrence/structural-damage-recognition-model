@@ -116,6 +116,18 @@ plt.ylabel('Loss')
 plt.legend(['Train', 'Validation'], loc='upper left')
 plt.show()
 
+
+from sklearn.metrics import ConfusionMatrixDisplay
+from sklearn.metrics import confusion_matrix
+
+predictions = model.predict(test_generator)
+matrix = confusion_matrix(y_test.argmax(axis=1), predictions.argmax(axis=1))
+labels = ["Non-collapse", "Partial Collapse", "Global Collapse"]
+disp = ConfusionMatrixDisplay(confusion_matrix=matrix, display_labels=labels)
+
+disp.plot(cmap=plt.cm.Oranges)
+plt.show()
+
 # import ray
 # from ray import air, tune
 # from ray.tune.schedulers import AsyncHyperBandScheduler
