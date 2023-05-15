@@ -16,6 +16,36 @@ import os
 x_train = np.load(r"/mnt/c/Windows/System32/repos/thesis_raw_data/task5/task5_X_train.npy")
 y_train = np.load(r"/mnt/c/Windows/System32/repos/thesis_raw_data/task5/task5_y_train.npy")
 
+# ADD DATASET FROM DIRECTORY
+
+# train_ds = tf.keras.utils.image_dataset_from_directory(
+#   data_dir,
+#   labels='inferred',
+#   label_mode='categorical',
+#   validation_split=0.2,
+#   subset="training",
+#   seed=123,
+#   image_size=(180, 180),
+#   batch_size=batch_size)
+
+# val_ds = tf.keras.utils.image_dataset_from_directory(
+#   data_dir,
+#   labels='inferred',
+#   label_mode='categorical',
+#   validation_split=0.2,
+#   subset="validation",
+#   seed=123,
+#   image_size=(180, 180),
+#   batch_size=batch_size)
+
+# test_dataset = val_ds.take(5)
+# val_ds = val_ds.skip(5)
+
+# print('Batches for testing -->', test_dataset.cardinality())
+# print('Batches for validating -->', val_ds.cardinality())
+
+
+
 x_test = np.load(r"/mnt/c/Windows/System32/repos/thesis_raw_data/task5/task5_X_test.npy")
 y_test = np.load(r"/mnt/c/Windows/System32/repos/thesis_raw_data/task5/task5_y_test.npy")
 print(x_train.shape)
