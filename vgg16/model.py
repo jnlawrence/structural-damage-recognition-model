@@ -11,44 +11,40 @@ import matplotlib.pyplot as plt
 from PIL import Image
 import os 
 
-# To load a file use the format [/mnt/c/path/to/file]
-# data = np.load(r'/mnt/c/Users/John/Documents/Datasets/task7/task7_X_train.npy')
-x_train = np.load(r"/mnt/c/Windows/System32/repos/thesis_raw_data/task5/task5_X_train.npy")
-y_train = np.load(r"/mnt/c/Windows/System32/repos/thesis_raw_data/task5/task5_y_train.npy")
-
+num_classes = 3
+batch_size = 16
+num_epochs = 2
+image_size = (448,448)
 # ADD DATASET FROM DIRECTORY
 
-# train_ds = tf.keras.utils.image_dataset_from_directory(
-#   data_dir,
-#   labels='inferred',
-#   label_mode='categorical',
-#   validation_split=0.2,
-#   subset="training",
-#   seed=123,
-#   image_size=(180, 180),
-#   batch_size=batch_size)
+data_dir = r"/mnt/c/Windows/System32/repos/thesis_raw_data/Doc_H-Data"
 
-# val_ds = tf.keras.utils.image_dataset_from_directory(
-#   data_dir,
-#   labels='inferred',
-#   label_mode='categorical',
-#   validation_split=0.2,
-#   subset="validation",
-#   seed=123,
-#   image_size=(180, 180),
-#   batch_size=batch_size)
+train_ds = tf.keras.utils.image_dataset_from_directory(
+  data_dir = data_dir,
+  labels='inferred',
+  label_mode='categorical',
+  validation_split=0.2,
+  subset="training",
+  seed=123,
+  image_size= image_size,
+  batch_size=batch_size)
 
-# test_dataset = val_ds.take(5)
-# val_ds = val_ds.skip(5)
+val_ds = tf.keras.utils.image_dataset_from_directory(
+  data_dir = data_dir,
+  labels='inferred',
+  label_mode='categorical',
+  validation_split=0.2,
+  subset="validation",
+  seed=123,
+  image_size= image_size,
+  batch_size=batch_size)
 
-# print('Batches for testing -->', test_dataset.cardinality())
-# print('Batches for validating -->', val_ds.cardinality())
+test_dataset = val_ds.take(5)
+val_ds = val_ds.skip(5)
 
+print('Batches for testing -->', test_dataset.cardinality())
+print('Batches for validating -->', val_ds.cardinality())
 
-
-x_test = np.load(r"/mnt/c/Windows/System32/repos/thesis_raw_data/task5/task5_X_test.npy")
-y_test = np.load(r"/mnt/c/Windows/System32/repos/thesis_raw_data/task5/task5_y_test.npy")
-print(x_train.shape)
 
 vgg16_model = VGG16(include_top = False,
             weights = 'imagenet', 
@@ -57,9 +53,7 @@ vgg16_model = VGG16(include_top = False,
             pooling = None,
             classes = 1000,
             classifier_activation="softmax") 
-num_classes = 3
-batch_size = 16
-num_epochs = 2
+
 
 # Do not retrain convolutional layers
 for layer in vgg16_model.layers:
