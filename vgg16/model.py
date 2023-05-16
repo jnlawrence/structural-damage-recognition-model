@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from PIL import Image
 import os 
 
-num_classes = 3
+num_classes = 5
 batch_size = 16
 num_epochs = 2
 image_size = (448,448)
@@ -49,7 +49,7 @@ print('Batches for validating -->', val_ds.cardinality())
 vgg16_model = VGG16(include_top = False,
             weights = 'imagenet', 
             input_tensor = None, 
-            input_shape = (224,224,3), #shape of npy file data
+            input_shape = (448,448,3), #shape of npy file data
             pooling = None,
             classes = 1000,
             classifier_activation="softmax") 
