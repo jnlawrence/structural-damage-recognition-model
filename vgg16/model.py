@@ -20,24 +20,24 @@ image_size = (448,448)
 data_dir = r"/mnt/c/Windows/System32/repos/thesis_raw_data/Doc_H-Data"
 
 train_ds = tf.keras.utils.image_dataset_from_directory(
-  data_dir = data_dir,
+  directory = data_dir,
   labels='inferred',
   label_mode='categorical',
   validation_split=0.2,
   subset="training",
   seed=123,
   image_size= image_size,
-  batch_size=batch_size)
+  batch_size= 16)
 
 val_ds = tf.keras.utils.image_dataset_from_directory(
-  data_dir = data_dir,
+  directory = data_dir,
   labels='inferred',
   label_mode='categorical',
   validation_split=0.2,
   subset="validation",
   seed=123,
   image_size= image_size,
-  batch_size=batch_size)
+  batch_size= 16)
 
 test_dataset = val_ds.take(5)
 val_ds = val_ds.skip(5)
@@ -74,35 +74,35 @@ model = Model(inputs=vgg16_model.input, outputs=output)
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
 # Create an instance of ImageDataGenerator for data augmentation
-datagen = ImageDataGenerator(
+# datagen = ImageDataGenerator(
                             #  rotation_range=20,
                             #  width_shift_range=0.1,
                             #  height_shift_range=0.1,
                             #  shear_range=0.2,
                             #  zoom_range=0.2,
                             #  horizontal_flip=True
-                             )
+                            #  )
 
 # Fit the ImageDataGenerator on the training data
-datagen.fit(x_train)
+# datagen.fit(train_ds)
 
-# Create generators for the training and validation data
-train_generator = datagen.flow(x_train,
-                               y_train, 
-                               batch_size=batch_size,
-                               shuffle=True
-                               )
+# # Create generators for the training and validation data
+# train_generator = datagen.flow(train_ds,
+#                                batch_size=batch_size,
+#                                shuffle=True
+#                                )
                                
-test_generator = datagen.flow(x_test, 
-                              y_test, 
-                              batch_size=batch_size,
-                              shuffle=False)
+# test_generator = datagen.flow(val_ds, 
+#                               batch_size=batch_size,
+#                               shuffle=False)
 
 # Use the generators to train the model
-history = model.fit(train_generator,
+history = model.fit(train_ds,
+          validation_data = val_ds,
           epochs=num_epochs,
-          steps_per_epoch= len(train_generator) // batch_size,
-          validation_data=test_generator)
+          )
+        #   steps_per_epoch= len(train_generator) // batch_size,
+        #   validation_data=test_generator)
 
 # Save the trained model
 model.save('vgg16_trained.h5')
@@ -145,7 +145,7 @@ from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.metrics import confusion_matrix
 
 predictions = model.predict(test_generator)
-matrix = confusion_matrix(y_test.argmax(axis=1), predictions.argmax(axis=1))
+matrix = confusion_matrix(val_ds.argmax(axis=1), predictions.argmax(axis=1))
 labels = ["Non-collapse", "Partial Collapse", "Global Collapse"]
 disp = ConfusionMatrixDisplay(confusion_matrix=matrix, display_labels=labels)
 
