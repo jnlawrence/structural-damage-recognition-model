@@ -12,39 +12,9 @@ from PIL import Image
 import os 
 
 # To load a file use the format [/mnt/c/path/to/file]
-# data = np.load(r'/mnt/c/Users/John/Documents/Datasets/task7/task7_X_train.npy')
+
 x_train = np.load(r"/mnt/c/Windows/System32/repos/thesis_raw_data/task5/task5_X_train.npy")
 y_train = np.load(r"/mnt/c/Windows/System32/repos/thesis_raw_data/task5/task5_y_train.npy")
-
-# ADD DATASET FROM DIRECTORY
-
-# train_ds = tf.keras.utils.image_dataset_from_directory(
-#   data_dir,
-#   labels='inferred',
-#   label_mode='categorical',
-#   validation_split=0.2,
-#   subset="training",
-#   seed=123,
-#   image_size=(180, 180),
-#   batch_size=batch_size)
-
-# val_ds = tf.keras.utils.image_dataset_from_directory(
-#   data_dir,
-#   labels='inferred',
-#   label_mode='categorical',
-#   validation_split=0.2,
-#   subset="validation",
-#   seed=123,
-#   image_size=(180, 180),
-#   batch_size=batch_size)
-
-# test_dataset = val_ds.take(5)
-# val_ds = val_ds.skip(5)
-
-# print('Batches for testing -->', test_dataset.cardinality())
-# print('Batches for validating -->', val_ds.cardinality())
-
-
 
 x_test = np.load(r"/mnt/c/Windows/System32/repos/thesis_raw_data/task5/task5_X_test.npy")
 y_test = np.load(r"/mnt/c/Windows/System32/repos/thesis_raw_data/task5/task5_y_test.npy")
@@ -57,6 +27,8 @@ vgg16_model = VGG16(include_top = False,
             pooling = None,
             classes = 1000,
             classifier_activation="softmax") 
+
+# Hyperparameters
 num_classes = 3
 batch_size = 16
 num_epochs = 2
@@ -146,6 +118,7 @@ plt.ylabel('Loss')
 plt.legend(['Train', 'Validation'], loc='upper left')
 plt.show()
 
+#Confusion Matrix
 
 from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.metrics import confusion_matrix
@@ -158,54 +131,6 @@ disp = ConfusionMatrixDisplay(confusion_matrix=matrix, display_labels=labels)
 disp.plot(cmap=plt.cm.Oranges)
 plt.show()
 
-# import ray
-# from ray import air, tune
-# from ray.tune.schedulers import AsyncHyperBandScheduler
-# from ray.tune.integration.keras import TuneReportCallback
-
-# def tune_mnist(num_training_iterations):
-#     sched = AsyncHyperBandScheduler(
-#         time_attr="training_iteration", max_t=400, grace_period=20
-#     )
-
-#     tuner = tune.Tuner(
-#         tune.with_resources(train_generator, resources={"cpu": 2, "gpu": 0}),
-#         tune_config=tune.TuneConfig(
-#             metric="mean_accuracy",
-#             mode="max",
-#             scheduler=sched,
-#             num_samples=len(train_generator),
-#         ),
-#         run_config=air.RunConfig(
-#             name="exp",
-#             stop={"mean_accuracy": 0.99, "training_iteration": num_training_iterations},
-#         ),
-#         param_space={
-#             "threads": 2,
-#             "lr": tune.uniform(0.001, 0.1),
-#             "momentum": tune.uniform(0.1, 0.9),
-#             "hidden": tune.randint(32, 512),
-#         },
-#     )
-#     results = tuner.fit()
-
-#     print("Best hyperparameters found were: ", results.get_best_result().config)
-
-# import argparse
-
-# if __name__ == "__main__":
-#     parser = argparse.ArgumentParser()
-#     parser.add_argument(
-#         "--smoke-test", action="store_true", help="Finish quickly for testing"
-#     )
-#     args, _ = parser.parse_known_args()
-
-#     if args.smoke_test:
-#         ray.init(num_cpus=4)
-
-#     tune_mnist(num_training_iterations=5 if args.smoke_test else 300)
-
-# x
 
 """ 
 load the VGG16 model without the fully connected layers using the 
